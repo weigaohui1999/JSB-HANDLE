@@ -74,3 +74,35 @@ export function debounce(method, wait, immediate) {
     }
   }
 }
+
+/**
+ * @desc  data to blob
+ * @param {String} dataURI
+ * @return {*}
+ */
+
+export function dataURItoBlob(dataURI) {
+  var byteString = window.atob(dataURI.split(',')[1])
+  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+  var ab = new ArrayBuffer(byteString.length)
+  var ia = new Uint8Array(ab)
+  for (var i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i)
+  }
+  return new Blob([ab], { type: mimeString })
+}
+
+/**
+ * @desc  data to blob
+ * @param {String} URI
+ * @return {*}
+ */
+
+export function downloadFile(URI) {
+  const a = document.createElement('a')
+  a.href = URI
+  a.style.display = 'none'
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+}

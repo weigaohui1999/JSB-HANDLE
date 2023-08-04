@@ -1,16 +1,17 @@
 <template>
-  <router-view v-slot="{ Component, route }">
-    <KeepAlive :include="keepAliveNames">
-      <component :is="Component" v-if="!tagStore.reloading" :key="route.fullPath" />
-    </KeepAlive>
-  </router-view>
+  <Keep-alive :include="[keepAliveNames]">
+    <router-view v-slot="{ Component, route }">
+      <component :is="Component" :key="route.fullPath" />
+    </router-view>
+  </Keep-alive>
 </template>
 
 <script setup>
-import { useTagsStore } from '@/store'
-const tagStore = useTagsStore()
+// import { useRoute } from 'vue-router'
+import * as tagStore from '@/store/modules/tags/helpers'
+// const route = useRoute()
 
 const keepAliveNames = computed(() => {
-  return tagStore.tags.filter((item) => item.keepAlive).map((item) => item.name)
+//   return tagStore.tags.filter((item) => item.keepAlive).map((item) => item.name)
 })
 </script>

@@ -2,25 +2,24 @@
   <AppPage :show-footer="true" bg-cover :style="{ backgroundImage: `url(${bgImg})` }">
     <div
       style="transform: translateY(25px)"
-      class="m-auto max-w-700 min-w-345 f-c-c rounded-10 bg-white bg-opacity-60 p-15 card-shadow"
-      dark:bg-dark
+      class="m-auto max-h-55.6% max-w-70% min-h-471 min-w-63% f-c-c bg-white bg-opacity-60 card-shadow"
     >
-      <div hidden w-380 px-20 py-35 md:block>
-        <img src="@/assets/images/login_banner.webp" w-full alt="login_banner" />
+      <div class="min-w-50%" hidden h-full md:block>
+        <img src="@/assets/images/login-banner.png" h-full w-full alt="login_banner" />
       </div>
 
-      <div w-320 flex-col px-20 py-35>
+      <div flex-c class="min-w-50% pl-150 pr-150 pt-8%" h-full>
         <h5 f-c-c text-24 font-normal color="#6a6a6a">
-          <icon-custom-logo mr-10 text-50 color-primary />
-          {{ title }}
+          <icon-custom-logo mr-10 text-25 color-primary />
+          吉顺办中台系统
         </h5>
         <div mt-30>
           <n-input
-            v-model:value="loginInfo.name"
+            v-model:value="loginInfo.account"
             autofocus
             class="h-50 items-center pl-10 text-16"
-            placeholder="admin"
-            :maxlength="20"
+            placeholder="请输入帮办人手机号"
+            :maxlength="11"
           />
         </div>
         <div mt-30>
@@ -29,17 +28,9 @@
             class="h-50 items-center pl-10 text-16"
             type="password"
             show-password-on="mousedown"
-            placeholder="123456"
+            placeholder="请输入帮办人密码"
             :maxlength="20"
             @keypress.enter="handleLogin"
-          />
-        </div>
-
-        <div mt-20>
-          <n-checkbox
-            :checked="isRemember"
-            label="记住我"
-            :on-update:checked="(val) => (isRemember = val)"
           />
         </div>
 
@@ -62,51 +53,38 @@
 </template>
 
 <script setup>
-import { lStorage, setToken } from '@/utils'
-import { useStorage } from '@vueuse/core'
-import bgImg from '@/assets/images/login_bg.webp'
+import { setToken } from '@/utils'
+import bgImg from '@/assets/images/login-bg.png'
 import api from './api'
 import { addDynamicRoutes } from '@/router'
+import qs from 'qs'
+import { useUserStore } from '@/store'
 
 const title = import.meta.env.VITE_TITLE
 
 const router = useRouter()
 const { query } = useRoute()
+const userStore = useUserStore()
 
 const loginInfo = ref({
-  name: '',
+  account: '',
   password: '',
 })
 
-initLoginInfo()
-
-function initLoginInfo() {
-  const localLoginInfo = lStorage.get('loginInfo')
-  if (localLoginInfo) {
-    loginInfo.value.name = localLoginInfo.name || ''
-    loginInfo.value.password = localLoginInfo.password || ''
-  }
-}
-
-const isRemember = useStorage('isRemember', false)
 const loading = ref(false)
 async function handleLogin() {
-  const { name, password } = loginInfo.value
-  if (!name || !password) {
-    $message.warning('请输入用户名和密码')
+  const { account, password } = loginInfo.value
+  if (!account || !password) {
+    $message.warning('请输入手机号和密码')
     return
   }
   try {
     loading.value = true
     $message.loading('正在验证...')
-    const res = await api.login({ name, password: password.toString() })
+    const res = await api.login(qs.stringify({ account, password: password.toString() }))
     $message.success('登录成功')
     setToken(res.data.token)
-    if (isRemember.value) {
-      lStorage.set('loginInfo', { name, password })
-    } else {
-      lStorage.remove('loginInfo')
-    }
+    await userStore.getUserInfo(res)
     await addDynamicRoutes()
     if (query.redirect) {
       const path = query.redirect

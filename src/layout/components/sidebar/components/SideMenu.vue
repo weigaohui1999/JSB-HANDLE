@@ -105,6 +105,9 @@ function handleMenuSelect(key, item) {
 <style lang="scss">
 .side-menu:not(.n-menu--collapsed) {
   .n-menu-item-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     &::before {
       left: 5px;
       right: 5px;

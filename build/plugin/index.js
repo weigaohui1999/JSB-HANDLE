@@ -12,15 +12,10 @@ import visualizer from 'rollup-plugin-visualizer'
 import viteCompression from 'vite-plugin-compression'
 
 import { configHtmlPlugin } from './html'
-import { configMockPlugin } from './mock'
 import unplugin from './unplugin'
 
 export function createVitePlugins(viteEnv, isBuild) {
   const plugins = [vue(), ...unplugin, configHtmlPlugin(viteEnv, isBuild), Unocss()]
-
-  if (viteEnv?.VITE_USE_MOCK) {
-    plugins.push(configMockPlugin(isBuild))
-  }
 
   if (viteEnv.VITE_USE_COMPRESS) {
     plugins.push(viteCompression({ algorithm: viteEnv.VITE_COMPRESS_TYPE || 'gzip' }))

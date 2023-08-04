@@ -1,5 +1,11 @@
 <template>
-  <QueryBar v-if="$slots.queryBar" mb-30 @search="handleSearch" @reset="handleReset">
+  <QueryBar
+    v-if="$slots.queryBar"
+    mb-30
+    @search="handleSearch"
+    @reset="handleReset"
+    @export="handleExport"
+  >
     <slot name="queryBar" />
   </QueryBar>
 
@@ -13,9 +19,14 @@
     :pagination="isPagination ? pagination : false"
     @update:checked-row-keys="onChecked"
     @update:page="onPageChange"
-  />
+  >
+    <template #empty>
+      <div class="table-empty w-e-full-screen-container">
+        <img src="@/assets/images/empty.gif" />
+      </div>
+    </template>
+  </n-data-table>
 </template>
-
 <script setup>
 import { utils, writeFile } from 'xlsx'
 
@@ -87,16 +98,20 @@ async function handleQuery() {
     let paginationParams = {}
     // 如果非分页模式或者使用前端分页,则无需传分页参数
     if (props.isPagination && props.remote) {
-      paginationParams = { pageNo: pagination.page, pageSize: pagination.pageSize }
+      paginationParams = { pageNum: pagination.page, pageSize: pagination.pageSize }
     }
     const { data } = await props.getData({
-      ...props.queryItems,
       ...props.extraParams,
       ...paginationParams,
+      param: {
+        ...props.queryItems,
+      },
     })
-    tableData.value = data?.pageData || data
+    tableData.value = data
     pagination.itemCount = data.total ?? data.length
   } catch (error) {
+    console.log(error)
+    console.log(2222)
     tableData.value = []
     pagination.itemCount = 0
   } finally {
@@ -131,6 +146,7 @@ function onChecked(rowKeys) {
 }
 function handleExport(columns = props.columns, data = tableData.value) {
   if (!data?.length) return $message.warning('没有数据')
+  console.log(props.columns)
   const columnsData = columns.filter((item) => !!item.title && !item.hideInExcel)
   const thKeys = columnsData.map((item) => item.key)
   const thData = columnsData.map((item) => item.title)
@@ -147,3 +163,29 @@ defineExpose({
   handleExport,
 })
 </script>
+
+<style lang="scss" scoped>
+.n-data-table {
+  height: calc(100% - 96px);
+  :deep(.n-data-table-base-table) {
+    height: 100% !important;
+    position: relative;
+    .n-data-table-empty {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+.table-empty {
+  img {
+    width: 350px;
+    height: 350px;
+    -webkit-user-drag: none;
+    &:after {
+      content: '暂无数据';
+    }
+  }
+}
+</style>

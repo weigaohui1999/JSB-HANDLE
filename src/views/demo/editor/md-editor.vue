@@ -1,10 +1,9 @@
 <template>
   <CommonPage>
-    <div h-60 flex items-center bg-white pl-20 pr-20 dark:bg-dark>
+    <div h-60 flex items-center bg-white pl-20 pr-20>
       <input
         v-model="post.title"
         class="mr-20 flex-1 pb-15 pt-15 text-20 font-bold color-primary"
-        dark:bg-dark
         type="text"
         placeholder="输入文章标题..."
       />
@@ -13,7 +12,7 @@
         保存
       </n-button>
     </div>
-    <MdEditor v-model="post.content" style="height: calc(100vh - 305px)" dark:bg-dark />
+    <MdEditor v-model="post.content" style="height: calc(100vh - 305px)" />
   </CommonPage>
 </template>
 

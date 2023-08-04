@@ -13,13 +13,6 @@ export const useAppStore = defineStore('app', {
     switchCollapsed() {
       this.collapsed = !this.collapsed
     },
-    setCollapsed(collapsed) {
-      this.collapsed = collapsed
-    },
-    /** 设置暗黑模式 */
-    setDark(isDark) {
-      this.isDark = isDark
-    },
     /** 切换/关闭 暗黑模式 */
     toggleDark() {
       this.isDark = !this.isDark

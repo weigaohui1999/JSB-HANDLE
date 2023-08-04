@@ -3,6 +3,7 @@ const Layout = () => import('@/layout/index.vue')
 export default {
   name: 'ErrorPage',
   path: '/error-page',
+  isHidden: true,
   component: Layout,
   redirect: '/error-page/404',
   meta: {

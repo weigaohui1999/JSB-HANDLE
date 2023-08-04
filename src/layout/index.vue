@@ -1,6 +1,7 @@
 <template>
   <n-layout has-sider wh-full>
     <n-layout-sider
+      class="bg-[#f5f6fb]"
       bordered
       collapse-mode="width"
       :collapsed-width="64"
@@ -9,20 +10,23 @@
       :collapsed="appStore.collapsed"
     >
       <SideBar />
-    </n-layout-sider>
-
-    <article flex-col flex-1 overflow-hidden>
-      <header
-        class="flex items-center border-b bg-white px-15 bc-eee"
-        dark="bg-dark border-0"
-        :style="`height: ${header.height}px`"
+      <n-button
+        ghost
+        type="primary"
+        size="medium"
+        circle
+        class="w-90%"
+        style="position: relative; bottom: -100px; margin: 10px"
+        title="退出登录"
+        @click="logout"
       >
-        <AppHeader />
-      </header>
-      <section v-if="tags.visible" hidden border-b bc-eee sm:block dark:border-0>
-        <AppTags :style="{ height: `${tags.height}px` }" />
-      </section>
-      <section flex-1 overflow-hidden bg-hex-f5f6fb dark:bg-hex-101014>
+        <template #icon>
+          <icon-custom-logout></icon-custom-logout>
+        </template>
+      </n-button>
+    </n-layout-sider>
+    <article flex-col flex-1 overflow-hidden>
+      <section flex-1 overflow-hidden bg-hex-ffffff>
         <AppMain />
       </section>
     </article>
@@ -30,12 +34,22 @@
 </template>
 
 <script setup>
-import AppHeader from './components/header/index.vue'
 import SideBar from './components/sidebar/index.vue'
 import AppMain from './components/AppMain.vue'
-import AppTags from './components/tags/index.vue'
-import { useAppStore } from '@/store'
-import { header, tags } from '~/settings'
+import { useAppStore, useUserStore } from '@/store'
+const title = import.meta.env.VITE_TITLE
 
 const appStore = useAppStore()
+const userStore = useUserStore()
+const logout = () => {
+  $dialog.confirm({
+    title: '提示',
+    type: 'info',
+    content: '确认退出？',
+    confirm() {
+      userStore.logout()
+      $message.success('已退出登录')
+    },
+  })
+}
 </script>

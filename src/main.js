@@ -10,16 +10,16 @@ import { setupStore } from '@/store'
 import App from './App.vue'
 import { useResize } from '@zclzone/utils'
 import { setupNaiveDiscreteApi } from './utils'
+import VueSignaturePad from 'vue-signature-pad'
 
 async function setupApp() {
   const app = createApp(App)
 
   setupStore(app)
   setupNaiveDiscreteApi()
-
   await setupRouter(app)
-
   app.use(useResize)
+  app.use(VueSignaturePad)
   app.mount('#app')
 }
 

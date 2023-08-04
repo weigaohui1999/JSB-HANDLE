@@ -16,7 +16,7 @@ export function reqResolve(config) {
    * * 加上 token
    * ! 认证方案: JWT Bearer
    */
-  config.headers.Authorization = config.headers.Authorization || 'Bearer ' + token
+  config.headers.token = token
 
   return config
 }
@@ -28,20 +28,22 @@ export function reqReject(error) {
 export function resResolve(response) {
   // TODO: 处理不同的 response.headers
   const { data, status, config, statusText } = response
-  if (data?.code !== 0) {
-    const code = data?.code ?? status
-
-    /** 根据code处理对应的操作，并返回处理后的message */
-    const message = resolveResError(code, data?.message ?? statusText)
-
-    /** 需要错误提醒 */
+  /** 根据code处理对应的操作，并返回处理后的message */
+  const code = data?.code ?? status
+  const message = resolveResError(code, data?.message ?? statusText)
+  if (data?.code) {
+    // /** 需要错误提醒 */
+    // !config.noNeedTip && window.$message?.error(message)
+    // return Promise.reject({ code, message, error: data || response })
+    return Promise.resolve(data)
+  } else {
     !config.noNeedTip && window.$message?.error(message)
     return Promise.reject({ code, message, error: data || response })
   }
-  return Promise.resolve(data)
 }
 
 export function resReject(error) {
+  console.log(error)
   if (!error || !error.response) {
     const code = error?.code
     /** 根据code处理对应的操作，并返回处理后的message */

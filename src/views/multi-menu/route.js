@@ -4,11 +4,12 @@ export default {
   name: 'MultipleMenu',
   path: '/multi-menu',
   component: Layout,
+  isHidden: true,
   meta: {
     title: '多级菜单',
     icon: 'ic:baseline-menu',
-    role: ['admin'],
-    requireAuth: true,
+    role: [],
+
     order: 4,
   },
   children: [
@@ -19,8 +20,7 @@ export default {
       meta: {
         title: 'a-1',
         icon: 'ic:baseline-menu',
-        role: ['admin'],
-        requireAuth: true,
+        role: [],
       },
       children: [
         {
@@ -30,8 +30,7 @@ export default {
           meta: {
             title: 'a-1-1',
             icon: 'ic:baseline-menu',
-            role: ['admin'],
-            requireAuth: true,
+            role: [],
           },
         },
         {
@@ -41,8 +40,7 @@ export default {
           meta: {
             title: 'a-1-2',
             icon: 'ic:baseline-menu',
-            role: ['admin'],
-            requireAuth: true,
+            role: [],
           },
         },
       ],
@@ -54,8 +52,7 @@ export default {
       meta: {
         title: 'a-2',
         icon: 'ic:baseline-menu',
-        role: ['admin'],
-        requireAuth: true,
+        role: [],
       },
       children: [
         {
@@ -65,8 +62,7 @@ export default {
           meta: {
             title: 'a-2-1（单个子菜单）',
             icon: 'ic:baseline-menu',
-            role: ['admin'],
-            requireAuth: true,
+            role: [],
           },
         },
       ],
