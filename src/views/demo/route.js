@@ -46,16 +46,5 @@ export default {
         keepAlive: true,
       },
     },
-    {
-      name: 'Upload',
-      path: 'upload',
-      component: () => import('./upload/index.vue'),
-      meta: {
-        title: '图片上传',
-        icon: 'mdi:upload',
-        role: [],
-        keepAlive: true,
-      },
-    },
   ],
 }

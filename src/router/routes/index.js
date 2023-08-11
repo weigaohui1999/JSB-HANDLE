@@ -13,7 +13,7 @@ export const basicRoutes = [
     meta: {
       title: '登录页',
     },
-  },
+  }
 ]
 
 export const NOT_FOUND_ROUTE = {

@@ -10,20 +10,6 @@
       :collapsed="appStore.collapsed"
     >
       <SideBar />
-      <n-button
-        ghost
-        type="primary"
-        size="medium"
-        circle
-        class="w-90%"
-        style="position: relative; bottom: -100px; margin: 10px"
-        title="退出登录"
-        @click="logout"
-      >
-        <template #icon>
-          <icon-custom-logout></icon-custom-logout>
-        </template>
-      </n-button>
     </n-layout-sider>
     <article flex-col flex-1 overflow-hidden>
       <section flex-1 overflow-hidden bg-hex-ffffff>
@@ -41,15 +27,4 @@ const title = import.meta.env.VITE_TITLE
 
 const appStore = useAppStore()
 const userStore = useUserStore()
-const logout = () => {
-  $dialog.confirm({
-    title: '提示',
-    type: 'info',
-    content: '确认退出？',
-    confirm() {
-      userStore.logout()
-      $message.success('已退出登录')
-    },
-  })
-}
 </script>

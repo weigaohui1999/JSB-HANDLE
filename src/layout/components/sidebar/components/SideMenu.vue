@@ -15,7 +15,6 @@
 <script setup>
 import { usePermissionStore } from '@/store'
 import { renderCustomIcon, renderIcon, isExternal } from '@/utils'
-
 const router = useRouter()
 const curRoute = useRoute()
 const permissionStore = usePermissionStore()

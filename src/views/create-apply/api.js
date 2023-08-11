@@ -1,5 +1,5 @@
 import { request } from '@/utils'
 
 export default {
-  getPage: () => {},
+  getItemList: (id) => request.get(`/item/listByDepId/${id}`),
 }

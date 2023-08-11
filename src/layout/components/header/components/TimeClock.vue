@@ -44,7 +44,7 @@ onBeforeUnmount(() => {
 .timeBox {
   width: 100%;
   border-radius: 30px;
-  margin: 30px auto;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   padding: 20px 0;

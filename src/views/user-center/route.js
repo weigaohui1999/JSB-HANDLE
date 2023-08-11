@@ -13,7 +13,7 @@ export default {
   children: [
     {
       name: 'User-Center',
-      path: 'user-center',
+      path: 'index',
       component: () => import('./index.vue'),
       meta: {
         title: '个人中心',

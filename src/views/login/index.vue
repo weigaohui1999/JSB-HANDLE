@@ -8,38 +8,40 @@
         <img src="@/assets/images/login-banner.png" h-full w-full alt="login_banner" />
       </div>
 
-      <div flex-c class="min-w-50% pl-150 pr-150 pt-8%" h-full>
+      <div  class="min-w-50% pt-8% h-full">
         <h5 f-c-c text-24 font-normal color="#6a6a6a">
           <icon-custom-logo mr-10 text-25 color-primary />
           吉顺办中台系统
         </h5>
-        <div mt-30>
+        <div mt-30 f-c-c>
           <n-input
             v-model:value="loginInfo.account"
             autofocus
-            class="h-50 items-center pl-10 text-16"
+            class="h-50 items-center w-300px! pl-10 text-16"
             placeholder="请输入帮办人手机号"
             :maxlength="11"
+            :disabled="loading"
           />
         </div>
-        <div mt-30>
+        <div mt-30 f-c-c>
           <n-input
             v-model:value="loginInfo.password"
-            class="h-50 items-center pl-10 text-16"
+            class="h-50 items-center w-300px! pl-10 text-16"
             type="password"
             show-password-on="mousedown"
             placeholder="请输入帮办人密码"
             :maxlength="20"
+            :disabled="loading"
             @keypress.enter="handleLogin"
           />
         </div>
 
-        <div mt-20>
+        <div mt-20 f-c-c>
           <n-button
             h-50
-            w-full
             rounded-5
             text-16
+            class="w-300!"
             type="primary"
             :loading="loading"
             @click="handleLogin"

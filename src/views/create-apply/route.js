@@ -4,7 +4,7 @@ export default {
   name: 'CreateApply',
   path: '/create-apply',
   component: Layout,
-  redirect: '/create-apply',
+  redirect: '/index',
   meta: {
     title: '创建流程',
     customIcon: 'createApply',
@@ -13,7 +13,7 @@ export default {
   children: [
     {
       name: 'Create-Apply',
-      path: 'create-apply',
+      path: 'index',
       component: () => import('./index.vue'),
       meta: {
         title: '创建流程',

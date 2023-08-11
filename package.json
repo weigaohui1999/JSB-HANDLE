@@ -46,6 +46,7 @@
     "pinia": "^2.0.33",
     "qs": "^6.11.2",
     "vite": "^4.3.5",
+    "vite-plugin-pwa": "^0.16.4",
     "vue": "3.3.0-beta.5",
     "vue-router": "^4.1.6",
     "vue-signature-pad": "^3.0.2",
