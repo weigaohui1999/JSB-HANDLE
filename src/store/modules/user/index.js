@@ -1,33 +1,29 @@
 import { defineStore } from 'pinia'
 import { resetRouter } from '@/router'
 import { useTagsStore, usePermissionStore } from '@/store'
-import { lStorage, removeToken, toLogin } from '@/utils'
+import { sStorage, removeToken, toLogin, lStorage } from '@/utils'
 
 export const useUserStore = defineStore('user', {
   state() {
     return {
       userInfo: {},
+      userId: lStorage.get('id'),
+      name: lStorage.get('name'),
+      headPicture: lStorage.get('headPicture'),
+      role: []
     }
   },
   getters: {
-    userId() {
-      return lStorage.get('userinfo')?.id
-    },
-    name() {
-      return lStorage.get('userinfo')?.name
-    },
-    headPicture() {
-      return lStorage.get('userinfo')?.headPicture
-    },
-    role() {
-      return this.userInfo?.role || []
-    },
+
   },
   actions: {
     async getUserInfo(res) {
       try {
-        // const { id, name, headPicture, role } = res.data
-        lStorage.set('userinfo', res.data)
+        const { id, name, headPicture, role } = res.data
+        lStorage.set('id', id)
+        lStorage.set('name', name)
+        lStorage.set('headPicture', headPicture)
+        lStorage.set('role', role)
         // this.userInfo = { id, name, headPicture, role }
         return Promise.resolve(res.data)
       } catch (error) {
@@ -43,6 +39,7 @@ export const useUserStore = defineStore('user', {
       resetPermission()
       resetRouter()
       lStorage.clear()
+      sStorage.clear()
       toLogin()
     },
     removeUserinfo() {

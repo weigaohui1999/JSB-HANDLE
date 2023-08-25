@@ -1,18 +1,5 @@
 <template>
-  <CommonPage show-footer title="事件列表">
-    <!--    <n-card  size="small"  hoverable  :key="idx" b-rd-8  v-if="!isEmpty" v-for="(dept, idx) in departmentList">-->
-    <!--      <template #header>-->
-    <!--        <div font-semibold b-b-1 border-b-blueGray>{{ dept.name }}</div>-->
-    <!--      </template>-->
-    <!--      <template #header-extra>-->
-    <!--        <div class="circle min-w-20 h-20 rounded-4rem text-3 text-center color-[#ffffff] br-20">{{ dept.itemModelList.length }}</div>-->
-    <!--      </template>-->
-    <!--      <n-scrollbar style="max-height: 150px">-->
-    <!--        <n-list hoverable clickable>-->
-    <!--          <n-list-item v-if="dept.itemModelList.length > 0"  v-for="(item, index) in dept.itemModelList" >{{ item.name }}</n-list-item>-->
-    <!--        </n-list>-->
-    <!--      </n-scrollbar>-->
-    <!--    </n-card>-->
+  <CommonPage show-footer title="事项列表">
     <div
       v-if="!isEmpty"
       style="
@@ -22,12 +9,13 @@
         grid-template-columns: minmax(0px, 1fr) minmax(0px, 4fr);
       "
     >
-      <n-anchor :show-rail="true" :show-background="true" affix :bound="120" ignore-gap>
+      <n-anchor :show-rail="true" :show-background="true" :bound="100">
         <n-anchor-link
           v-for="(dept, idx) in departmentList"
           :title="dept.name"
           :key="idx"
           :href="`#${dept.name}`"
+          @click="stopHandle($event)"
         />
       </n-anchor>
       <n-scrollbar style="max-height: 80vh">
@@ -39,6 +27,7 @@
           v-if="!isEmpty"
           v-for="(dept, idx) in departmentList"
           :id="dept.name"
+          mb-10px
         >
           <template #header>
             <n-badge :value="dept.itemModelList.length" :max="9999">
@@ -49,14 +38,22 @@
             <n-list-item
               v-if="dept.itemModelList.length > 0"
               v-for="(item, index) in dept.itemModelList"
+              :key="index"
             >
-              {{ item.name }}
+              {{ index + 1 + '.' + item.name }}
+              <template #suffix>
+                <n-button-group>
+                  <n-button ghost type="primary" @click="toDetail(item.id)">办事指南</n-button>
+                  <n-button
+                    type="primary"
+                    @click="toApply(item.id, item.materialsList, item.departmentId)"
+                  >
+                    在线办理
+                  </n-button>
+                </n-button-group>
+              </template>
             </n-list-item>
-            <n-list-item
-              v-if="dept.itemModelList.length === 0"
-            >
-              暂无数据
-            </n-list-item>
+            <n-list-item v-if="dept.itemModelList.length === 0">暂无数据</n-list-item>
           </n-list>
         </n-card>
       </n-scrollbar>
@@ -73,13 +70,10 @@
 
 <script setup>
 import userApi from '@/views/user-center/api'
-import { AppsSharp } from '@vicons/ionicons5'
-import api from './api'
 import CommonPage from '@/components/page/CommonPage.vue'
+import { router } from '@/router'
+import { lStorage } from '@/utils'
 defineOptions({ name: 'CreateApply' })
-
-const route = useRoute()
-const router = useRouter()
 const isEmpty = ref(false)
 const departmentList = ref([])
 async function getDepartmentList() {
@@ -96,9 +90,22 @@ async function getDepartmentList() {
   }
 }
 
-// watch(route, (n, o) => {
-//   router.go(0)
-// })
+function stopHandle(event) {
+  event.preventDefault()
+
+}
+
+function toDetail(id) {
+  router.push(`/create-apply/detail/${id}`)
+}
+
+function toApply(id, materialsList, deptId) {
+  lStorage.set('materialsList', materialsList || [])
+  router.push({
+    path: `/create-apply/apply/${id}`,
+    query: { deptId: deptId },
+  })
+}
 
 onMounted(() => {
   getDepartmentList()
@@ -106,13 +113,9 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-:deep(.n-card) {
-  .n-card__content {
-    //display: grid;
-    //gap: 16px;
-    //grid-template-columns: minmax(0px, 1fr) minmax(0px, 1fr);
-    //align-items: flex-start;
-  }
+:deep(.n-list-item__suffix) {
+  width: 160px;
+  flex-basis: auto !important;
 }
 .circle {
   background-color: var(--primary-color);

@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import { setToken } from '@/utils'
+import {lStorage, setToken} from '@/utils'
 import bgImg from '@/assets/images/login-bg.png'
 import api from './api'
 import { addDynamicRoutes } from '@/router'
@@ -87,6 +87,8 @@ async function handleLogin() {
     $message.success('登录成功')
     setToken(res.data.token)
     await userStore.getUserInfo(res)
+    userStore.name = res.data.name
+    userStore.headPicture = res.data.headPicture
     await addDynamicRoutes()
     if (query.redirect) {
       const path = query.redirect

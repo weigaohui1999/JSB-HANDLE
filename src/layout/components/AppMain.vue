@@ -1,9 +1,9 @@
 <template>
-  <Keep-alive :include="[keepAliveNames]">
-    <router-view v-slot="{ Component, route }">
+  <router-view v-slot="{ Component, route }">
+    <keep-alive :include="[keepAliveNames]">
       <component :is="Component" :key="route.fullPath" />
-    </router-view>
-  </Keep-alive>
+    </keep-alive>
+  </router-view>
 </template>
 
 <script setup>
@@ -12,6 +12,6 @@ import * as tagStore from '@/store/modules/tags/helpers'
 // const route = useRoute()
 
 const keepAliveNames = computed(() => {
-//   return tagStore.tags.filter((item) => item.keepAlive).map((item) => item.name)
+  return ['CreateApply', 'TaskIndex', 'UserCenter', 'ApplyDetail']
 })
 </script>

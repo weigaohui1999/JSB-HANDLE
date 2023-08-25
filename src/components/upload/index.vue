@@ -1,14 +1,15 @@
 <template>
   <n-upload
     ref="upload"
+    v-model:file-list="fileArr"
     :custom-request="handleUpload"
-    :default-file-list="fileList"
+    :disabled="disabled"
+    :max="number"
     accept=".png,.jpg,.jpeg"
     list-type="image-card"
     @before-upload="onBeforeUpload"
-    :max="number"
     @preview="handlePreview"
-    :disabled="disabled"
+    @remove="handleRemove"
   />
   <n-modal v-model:show="showModal" preset="card" style="width: 600px" title="一张很酷的图片">
     <img :src="previewImageUrl" style="width: 100%" />
@@ -37,7 +38,7 @@ const emit = defineEmits(['update:value'])
 
 const showModal = ref(false)
 const upload = ref(null)
-const fileList = ref([])
+const fileArr = ref([])
 const previewImageUrl = ref('')
 
 function onBeforeUpload({ file }) {
@@ -49,7 +50,7 @@ function onBeforeUpload({ file }) {
 }
 
 function handleRemoveFileList() {
-  fileList.value = []
+  fileArr.value = []
 }
 
 function handUpdateFileList(data) {
@@ -57,10 +58,10 @@ function handUpdateFileList(data) {
   typeof data == 'object'
     ? data.forEach((item, index) => {
         obj.push({
-          id: index,
+          uid: index,
           name: item.slice(item.lastIndexOf('/') + 1),
-          percent: 100,
-          status: 'success',
+          percentage: 100,
+          status: 'finished',
           url: item,
         })
       })
@@ -68,63 +69,54 @@ function handUpdateFileList(data) {
         {
           uid: 0,
           name: data.slice(data.lastIndexOf('/') + 1),
-          percent: 100,
-          status: 'success',
+          percentage: 100,
+          status: 'finished',
           url: data,
         },
       ])
-  fileList.value = obj
+  fileArr.value = obj
 }
 
-function handlePreview() {
+function handlePreview(file) {
   const { url } = file
   previewImageUrl.value = url
   showModal.value = true
 }
 
-async function handleUpload({ file, onFinish }) {
+const handleUpload = async ({ file, onFinish }) => {
   if (!file || !file.type) {
     $message.error('请选择文件')
   }
-
-  // 模拟上传
-  $message.loading('上传中...')
   let formData = new FormData()
-  formData.append('file', file)
+  formData.append('file', file.file)
 
-  let length = fileList.value.length
-  let fileItem = {
-    id: file.uid,
-    name: file.name,
-    percentage: 0,
-    status: 'uploading',
-    url: '',
-  }
-  //  预上传 开始占位标识
-  fileList.value.push(fileItem)
+  let length = fileArr.value.length - 1
+
   const res = await api.upload(formData)
   if (res && res.code == 200) {
-    fileList.value[length].percentage = 100
-    fileList.value[length].status = 'finished'
-    fileList.value[length].url = res.data
+    fileArr.value[length].percentage = 100
+    fileArr.value[length].status = 'finished'
+    fileArr.value[length].url = res.data
+    console.log(fileArr.value)
     $message.success('上传成功')
+    updateFileList()
     onFinish()
   } else {
+    fileArr.value[length].status = 'error'
     $message.error('上传失败')
   }
 }
 
-watch(
-  () => fileList,
-  (n, o) => {
-    console.log(n)
-    console.log(o)
-    let data = []
-    n.forEach((item) => {
-      item.status === 'finished' ? data.push(item.url) : void 0
-    })
-    emit('update:value', props.number === 1 ? data[0] : data)
-  },
-  { deep: true }
-)
+function updateFileList() {
+  let data = []
+  fileArr.value.forEach((item) => {
+    item.status === 'finished' ? data.push(item.url) : void 0
+  })
+  emit('update:value', props.number === 1 ? data[0] : data)
+}
+
+function handleRemove({ file, fileList }) {
+  let key = fileList.findIndex((item) => item === file)
+  return fileArr.value.splice(key, 1)
+}
 </script>

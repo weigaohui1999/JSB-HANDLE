@@ -12,11 +12,33 @@ export default {
   },
   children: [
     {
-      name: 'Create-Apply',
+      name: 'CreateApply',
       path: 'index',
       component: () => import('./index.vue'),
       meta: {
         title: '创建流程',
+        customIcon: 'createApply',
+        keepAlive: true,
+      },
+    },
+    {
+      name: 'ApplyDetail',
+      path: 'detail/:id',
+      component: () => import('./detail.vue'),
+      isHidden: true,
+      meta: {
+        title: '事项详情',
+        customIcon: 'taskDetail',
+        keepAlive: true,
+      },
+    },
+    {
+      name: 'ApplyIndex',
+      path: 'apply/:id',
+      component: () => import('./apply.vue'),
+      isHidden: true,
+      meta: {
+        title: '业务申报',
         customIcon: 'createApply',
         keepAlive: true,
       },

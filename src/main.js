@@ -2,6 +2,7 @@
 import '@/styles/reset.css'
 import 'uno.css'
 import '@/styles/global.scss'
+import '@/styles/common.scss'
 import 'virtual:svg-icons-register'
 
 import { createApp } from 'vue'

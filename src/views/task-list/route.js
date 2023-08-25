@@ -2,18 +2,18 @@ const Layout = () => import('@/layout/index.vue')
 
 export default {
   name: 'TaskList',
-  path: '/task-list',
+  path: '/',
   component: Layout,
   redirect: '/task-list',
   meta: {
     title: '任务列表',
     customIcon: 'taskList',
-    order: 3,
+    order: 1,
   },
   children: [
     {
       name: 'TaskIndex',
-      path: 'index',
+      path: 'task-list',
       component: () => import('./index.vue'),
       meta: {
         title: '任务列表',

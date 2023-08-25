@@ -6,7 +6,7 @@
           <n-spin :show="modalLoading">
             <n-form
               ref="formRef"
-              :model="userDetail"
+              :model="data.userDetail"
               label-placement="left"
               label-width="auto"
               :disabled="disabled"
@@ -22,7 +22,12 @@
                   trigger: ['input', 'blur'],
                 }"
               >
-                <n-input v-model:value="userDetail.name" placeholder="请输入姓名" round clearable />
+                <n-input
+                  v-model:value="data.userDetail.name"
+                  placeholder="请输入姓名"
+                  round
+                  clearable
+                />
               </n-form-item>
               <n-form-item
                 label="登录名"
@@ -34,7 +39,7 @@
                 }"
               >
                 <n-input
-                  v-model:value="userDetail.account"
+                  v-model:value="data.userDetail.account"
                   placeholder="请输入登录名"
                   round
                   clearable
@@ -43,12 +48,12 @@
               <n-form-item label="头像" path="headPicture">
                 <my-upload
                   ref="upload"
-                  v-model:value="userDetail.headPicture"
+                  v-model:value="data.userDetail.headPicture"
                   :disabled="disabled"
                 />
               </n-form-item>
               <n-form-item label="性别" path="sex">
-                <n-radio-group v-model:value="userDetail.sex">
+                <n-radio-group v-model:value="data.userDetail.sex">
                   <n-space>
                     <n-radio :value="1">男</n-radio>
                     <n-radio :value="0">女</n-radio>
@@ -65,7 +70,7 @@
                 }"
               >
                 <n-input
-                  v-model:value="userDetail.phone"
+                  v-model:value="data.userDetail.phone"
                   placeholder="请输入手机号"
                   round
                   clearable
@@ -81,7 +86,7 @@
                 }"
               >
                 <n-input
-                  v-model:value="userDetail.idCard"
+                  v-model:value="data.userDetail.idCard"
                   placeholder="请输入身份证号"
                   round
                   clearable
@@ -98,7 +103,7 @@
                 }"
               >
                 <n-date-picker
-                  v-model:formatted-value="userDetail.birthday"
+                  v-model:formatted-value="data.userDetail.birthday"
                   type="date"
                   placeholder="请选择出生日期"
                   class="w-full"
@@ -116,7 +121,7 @@
                 }"
               >
                 <n-select
-                  v-model:value="userDetail.departmentId"
+                  v-model:value="data.userDetail.departmentId"
                   placeholder="请选择所属部门"
                   label-field="name"
                   value-field="id"
@@ -202,16 +207,18 @@ import { useUserStore } from '@/store'
 import qs from 'qs'
 
 defineOptions({ name: 'UserCenter' })
-const userId = lStorage.get('userinfo')?.id
+const userId = lStorage.get('id')
 const userStore = useUserStore()
 const modalLoading = ref(false)
-const userDetail = ref({})
 const userPassword = ref({})
 const formRef = ref(null)
 const userPasswordRef = ref(null)
 const upload = ref(null)
 const disabled = ref(true)
 const department = ref([])
+const data = reactive({
+  userDetail: {},
+})
 
 function validatePasswordStartWith(rule, value) {
   if (value === userPassword.value.oldPw) return false
@@ -244,7 +251,13 @@ async function getCommossionDetail() {
     modalLoading.value = true
     const res = await api.getCommossionDetail(userId)
     if (res && res.code == 200) {
-      userDetail.value = res.data
+      data.userDetail = res.data
+      upload.value.handUpdateFileList(data.userDetail['headPicture'])
+      const { name, headPicture } = res.data
+      lStorage.set('name', name)
+      userStore.name = name
+      lStorage.set('headPicture', headPicture)
+      userStore.headPicture = headPicture
     } else {
       $message.warning(res.message)
     }
@@ -273,9 +286,11 @@ async function handleValidateButtonClick(e) {
   formRef.value?.validate(async (errors) => {
     if (!errors) {
       modalLoading.value = true
-      const res = await api.updateUserinfo(userDetail.value)
+      const res = await api.updateUserinfo(data.userDetail)
       if (res && res.code === 200) {
         $message.success('修改成功')
+        await getCommossionDetail()
+        disabled.value = true
       }
     } else {
       $message.error('修改失败')

@@ -347,37 +347,7 @@ onMounted(() => {
   top: 3px;
   left: 0;
 }
-:deep(.n-descriptions-header) {
-  color: var(--primary-color);
-  font-size: 20px;
-  //font-weight: bold;
-  &::before {
-    content: '';
-    display: inline-block;
-    background-color: var(--primary-color);
-    width: 4px;
-    height: 18px;
-    position: relative;
-    left: -5px;
-    border: 1px solid;
-    border-radius: 10px;
-    top: 50%;
-    transform: translate(0, 11%);
-  }
-}
-:deep(.n-descriptions) {
-  padding: 20px 25px;
-  box-shadow: 5px 6px 2px 1px rgba(207, 144, 144, 0.2), 0 2px 4px rgba(0, 0, 0, 0.2);
-  .n-descriptions-table-content {
-    line-height: 40px !important;
-  }
-}
 
-.has-bottom-line {
-  :deep(.n-descriptions-table-content__content) {
-    border-bottom: 1px solid var(--primary-color);
-  }
-}
 .b-1 {
   border-color: var(--primary-color);
 }
